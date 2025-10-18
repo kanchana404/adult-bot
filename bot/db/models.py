@@ -36,3 +36,18 @@ class Transaction(TypedDict):
     meta: dict
     created_at: datetime
 
+class Payment(TypedDict):
+    """Payment document model for tracking Telegram Stars payments."""
+    _id: ObjectId
+    user_id: int
+    username: Optional[str]
+    payload: str  # Unique payload for this payment
+    stars_amount: int  # Amount in Telegram Stars
+    tickets_amount: int  # Tickets to be credited
+    usd_amount: str  # USD equivalent (Decimal string)
+    payment_url: str  # Invoice URL
+    status: Literal["pending", "paid", "cancelled"]
+    created_at: datetime
+    paid_at: Optional[datetime]
+    telegram_payment_id: Optional[str]  # Telegram's payment charge ID
+

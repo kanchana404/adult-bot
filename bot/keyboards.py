@@ -32,7 +32,32 @@ def kb_topup_methods() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="⭐ Telegram Star Payment", callback_data=TELEGRAM_STARS)],
         [InlineKeyboardButton(text="🪙 Crypto", callback_data=CRYPTO)],
         [InlineKeyboardButton(text="💳 PayPal", callback_data=PAYPAL)],
+        [InlineKeyboardButton(text="📊 Payment History", callback_data=CHECK_PAYMENT_HISTORY)],
         [InlineKeyboardButton(text="⬅️ Back to Profile", callback_data=BACK_PROFILE)]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+def kb_star_packages() -> InlineKeyboardMarkup:
+    """Telegram Stars package selection keyboard."""
+    from bot.services.payments import PAYMENT_PACKAGES
+    
+    keyboard = []
+    for i, pkg in enumerate(PAYMENT_PACKAGES):
+        button_text = f"{pkg['label']} - {pkg['stars']} ⭐ ({pkg['tickets']} 🎟️)"
+        keyboard.append([InlineKeyboardButton(
+            text=button_text, 
+            callback_data=f"{STAR_PACKAGE_PREFIX}{i}"
+        )])
+    
+    keyboard.append([InlineKeyboardButton(text="⬅️ Back", callback_data=TOPUP)])
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+def kb_payment_verify(payment_url: str, payload: str) -> InlineKeyboardMarkup:
+    """Payment verification keyboard."""
+    keyboard = [
+        [InlineKeyboardButton(text="💳 Pay with Stars", url=payment_url)],
+        [InlineKeyboardButton(text="✅ I Paid - Verify", callback_data=f"{VERIFY_PAYMENT_PREFIX}{payload}")],
+        [InlineKeyboardButton(text="⬅️ Back", callback_data=TELEGRAM_STARS)]
     ]
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 

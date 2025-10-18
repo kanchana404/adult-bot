@@ -27,3 +27,8 @@ DAILY_CHECKIN = "daily_checkin"
 VIEW_TERMS = "view_terms"
 AGREE_TERMS = "agree_terms"
 
+# Stars payment callbacks
+STAR_PACKAGE_PREFIX = "star_pkg_"  # Format: star_pkg_{index}
+VERIFY_PAYMENT_PREFIX = "verify_pay_"  # Format: verify_pay_{payload}
+CHECK_PAYMENT_HISTORY = "check_payment_history"
+

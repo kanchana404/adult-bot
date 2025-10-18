@@ -80,7 +80,6 @@ async def handle_language_selection(callback: CallbackQuery) -> None:
     
     # Update the main menu with new language
     from bot.keyboards import kb_main_menu
-    from bot.languages import get_text
     
     # Create new main menu with updated language
     keyboard = [
@@ -122,7 +121,6 @@ async def back_to_main_from_language(callback: CallbackQuery) -> None:
     
     # Send main menu with current language
     from bot.keyboards import kb_main_menu
-    from bot.languages import get_text
     
     # Create main menu with current language
     keyboard = [

@@ -4,7 +4,7 @@ from datetime import datetime
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
 from bot.db.mongo import get_database
-from bot.db.models import User, Referral, Transaction
+from bot.db.models import User, Referral, Transaction, Payment
 
 class UserRepository:
     """Repository for user operations."""
@@ -86,4 +86,43 @@ class TransactionRepository:
         """Get user's transactions."""
         cursor = self.collection.find({"user_id": user_id}).sort("created_at", -1).limit(limit)
         return await cursor.to_list(length=limit)
+
+class PaymentRepository:
+    """Repository for payment operations."""
+    
+    def __init__(self):
+        self.collection: AsyncIOMotorCollection = get_database().payments
+    
+    async def create_payment(self, payment: Payment) -> None:
+        """Create a new payment record."""
+        await self.collection.insert_one(payment)
+    
+    async def get_payment_by_payload(self, payload: str) -> Optional[Payment]:
+        """Get payment by payload."""
+        return await self.collection.find_one({"payload": payload})
+    
+    async def update_payment_status(self, payload: str, telegram_payment_id: str) -> None:
+        """Mark payment as paid."""
+        await self.collection.update_one(
+            {"payload": payload},
+            {
+                "$set": {
+                    "status": "paid",
+                    "paid_at": datetime.utcnow(),
+                    "telegram_payment_id": telegram_payment_id
+                }
+            }
+        )
+    
+    async def get_user_payments(self, user_id: int, limit: int = 50) -> List[Payment]:
+        """Get user's payment history."""
+        cursor = self.collection.find({"user_id": user_id}).sort("created_at", -1).limit(limit)
+        return await cursor.to_list(length=limit)
+    
+    async def cancel_payment(self, payload: str) -> None:
+        """Cancel a payment."""
+        await self.collection.update_one(
+            {"payload": payload},
+            {"$set": {"status": "cancelled"}}
+        )
 

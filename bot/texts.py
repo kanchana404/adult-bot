@@ -70,10 +70,56 @@ TERMS_ACCEPTED = "Thank you for accepting our Terms of Service. You can now use 
 DAILY_CHECKIN_SUCCESS = "✅ Daily check-in successful! You received 1 🎟 ticket."
 DAILY_CHECKIN_COOLDOWN = "You've already checked in today! Come back in {time}"
 
-# Payment stubs
-TELEGRAM_STARS_MSG = "Telegram Stars payment coming soon."
+# Payment stubs for other methods
 CRYPTO_MSG = "Crypto payment coming soon."
 PAYPAL_MSG = "PayPal payment coming soon."
+
+# Telegram Stars payment texts
+STARS_PAYMENT_HEADER = """⭐ Telegram Stars Payment
+
+Choose a package to purchase tickets:
+
+💡 Benefits of Stars Payment:
+• Fast & Secure
+• Instant Processing
+• Official Telegram Payment
+• No Extra Fees
+
+Select a package below:"""
+
+PAYMENT_INSTRUCTIONS = """💎 {package}
+
+💰 Price: {stars} ⭐ Stars (${usd})
+🎟️ You'll receive: {tickets} tickets
+
+📋 How to pay:
+1️⃣ Click 'Pay with Stars' button
+2️⃣ Complete payment in Telegram
+3️⃣ Click 'I Paid - Verify' to check status
+
+⚡️ Payment is processed instantly!"""
+
+PAYMENT_PENDING = """⏳ Payment Not Detected Yet
+
+Price: {stars} ⭐ Stars
+Tickets: {tickets} 🎟️
+
+Please complete the payment first, then click 'Check Again'.
+
+Note: It may take a few seconds to process after payment."""
+
+PAYMENT_CONFIRMED = """✅ Payment Confirmed!
+
+Amount: {stars} ⭐ Stars
+Tickets Credited: {tickets} 🎟️
+Paid at: {paid_at}
+Transaction ID: {transaction_id}
+
+🎉 Your tickets have been added to your account!
+Thank you for your purchase! 💝"""
+
+PAYMENT_HISTORY_HEADER = "📊 Your Payment History:\n"
+PAYMENT_HISTORY_EMPTY = "📊 Payment History\n\nYou haven't made any payments yet."
 
 # Welcome messages
 WELCOME_NEW = "Welcome! You've been granted $0.10 balance and 1 ticket to get started."

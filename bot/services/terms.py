@@ -24,7 +24,7 @@ class TermsService:
     async def accept_terms(self, user_id: int) -> bool:
         """Mark user as having accepted terms of service."""
         try:
-            await self.user_repo.update_user(user_id, {"$set": {"accepted_terms": True}})
+            await self.user_repo.update_user(user_id, {"accepted_terms": True})
             logger.info(f"User {user_id} accepted terms of service")
             return True
         except Exception as e:
