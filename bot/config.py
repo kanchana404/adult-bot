@@ -3,7 +3,8 @@ import os
 from typing import List, Optional
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load environment variables from bot/.env file
+load_dotenv("bot/.env")
 
 # Required environment variables
 BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
@@ -16,6 +17,11 @@ if admin_ids_str := os.getenv("ADMIN_IDS"):
     ADMIN_IDS = [int(x.strip()) for x in admin_ids_str.split(",")]
 
 BOT_PUBLIC_USERNAME: Optional[str] = os.getenv("BOT_PUBLIC_USERNAME")
+
+# Crypto payment configuration
+CRYPTO_BOT_API_TOKEN: str = os.getenv("CRYPTO_BOT_API_TOKEN", "")
+CRYPTO_BOT_API_URL: str = os.getenv("CRYPTO_BOT_API_URL", "https://testnet-pay.crypt.bot/api")
+SEND_BOT_USERNAME: str = os.getenv("SEND_BOT_USERNAME", "send")
 
 # Validation
 if not BOT_TOKEN:

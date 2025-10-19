@@ -121,6 +121,78 @@ Thank you for your purchase! 💝"""
 PAYMENT_HISTORY_HEADER = "📊 Your Payment History:\n"
 PAYMENT_HISTORY_EMPTY = "📊 Payment History\n\nYou haven't made any payments yet."
 
+# Crypto payment texts
+CRYPTO_PAYMENT_HEADER = """🪙 Crypto Payment
+
+Choose a package to purchase tickets:
+
+💡 Benefits of Crypto Payment:
+• Fast & Secure
+• Multiple Cryptocurrencies
+• Low Fees
+• Instant Processing
+
+Supported currencies: USDT, TON, BTC, ETH, LTC, BNB, TRX, USDC
+
+Select a package below:"""
+
+CRYPTO_INVOICE_CREATED = """💵 Crypto Invoice Created!
+
+💰 Amount: {amount} {currency}
+🎟️ You'll receive: {tickets} tickets
+🔖 Invoice ID: {invoice_id}
+
+📋 How to pay:
+1️⃣ Click 'Pay Invoice' button
+2️⃣ Complete payment via @send
+3️⃣ Click 'Check Status' to verify
+
+⚡️ Payment is processed automatically!"""
+
+CRYPTO_INVOICE_PENDING = """⏳ Payment Pending
+
+Amount: {amount} {currency}
+Tickets: {tickets} 🎟️
+Status: {status}
+
+Please complete the payment first, then click 'Check Again'.
+
+Note: It may take a few minutes to process after payment."""
+
+CRYPTO_INVOICE_CONFIRMED = """✅ Payment Confirmed!
+
+Amount: {amount} {currency}
+Tickets Credited: {tickets} 🎟️
+Paid at: {paid_at}
+Invoice ID: {invoice_id}
+
+🎉 Your tickets have been added to your account!
+Thank you for your payment! 💝"""
+
+CRYPTO_INVOICE_EXPIRED = """⏰ Invoice Expired
+
+This invoice has expired.
+Please create a new invoice to continue."""
+
+CRYPTO_CUSTOM_INVOICE = """💰 Custom Crypto Invoice
+
+Send amount in format:
+/invoice <amount> <currency>
+
+Examples:
+• /invoice 10 USDT
+• /invoice 0.1 TON
+• /invoice 0.0001 BTC
+
+Supported: USDT, TON, BTC, ETH, LTC, BNB, TRX, USDC"""
+
+CRYPTO_HISTORY_HEADER = "📊 Your Crypto Payment History:\n"
+CRYPTO_HISTORY_EMPTY = "📊 Crypto Payment History\n\nYou haven't made any crypto payments yet."
+
+# Unified payment history templates
+UNIFIED_PAYMENT_HISTORY_HEADER = "📊 Payment History (Page {page} of {total})\n\n"
+UNIFIED_PAYMENT_HISTORY_EMPTY = "📊 Payment History\n\nYou haven't made any payments yet."
+
 # Welcome messages
 WELCOME_NEW = "Welcome! You've been granted $0.10 balance and 1 ticket to get started."
 WELCOME_BACK = "Welcome back! Here's your main menu:"

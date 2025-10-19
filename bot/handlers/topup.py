@@ -11,7 +11,9 @@ from bot.utils.formatting import format_currency
 from bot.callbacks import (
     TELEGRAM_STARS, CRYPTO, PAYPAL, TOPUP, 
     STAR_PACKAGE_PREFIX, VERIFY_PAYMENT_PREFIX, 
-    CHECK_PAYMENT_HISTORY
+    CHECK_PAYMENT_HISTORY, CRYPTO_PACKAGE_PREFIX,
+    CHECK_CRYPTO_INVOICE_PREFIX, CHECK_CRYPTO_HISTORY,
+    CREATE_CUSTOM_CRYPTO, UNIFIED_PAYMENT_HISTORY, UNIFIED_PAYMENT_PAGE_PREFIX
 )
 
 logger = logging.getLogger(__name__)
@@ -115,6 +117,39 @@ async def topup_callback(callback: CallbackQuery) -> None:
     await callback.answer()
     await callback.message.edit_text(topup_text, reply_markup=kb_topup_methods())
 
+@router.callback_query(F.data.startswith(CRYPTO_PACKAGE_PREFIX))
+async def crypto_package_selected(callback: CallbackQuery) -> None:
+    """Handle crypto package selection."""
+    package_index = int(callback.data.replace(CRYPTO_PACKAGE_PREFIX, ""))
+    payment_service = PaymentService()
+    await payment_service.create_crypto_invoice(callback, package_index)
+
+@router.callback_query(F.data.startswith(CHECK_CRYPTO_INVOICE_PREFIX))
+async def check_crypto_invoice(callback: CallbackQuery) -> None:
+    """Handle crypto invoice status check."""
+    invoice_id = callback.data.replace(CHECK_CRYPTO_INVOICE_PREFIX, "")
+    payment_service = PaymentService()
+    await payment_service.check_crypto_invoice_status(callback, invoice_id)
+
+@router.callback_query(F.data == CHECK_CRYPTO_HISTORY)
+async def check_crypto_history(callback: CallbackQuery) -> None:
+    """Handle crypto payment history request."""
+    user_id = callback.from_user.id
+    payment_service = PaymentService()
+    
+    history_text = await payment_service.get_crypto_payment_history(user_id)
+    
+    from bot.keyboards import kb_topup_methods
+    await callback.answer()
+    await callback.message.edit_text(history_text, reply_markup=kb_topup_methods())
+
+@router.callback_query(F.data == CREATE_CUSTOM_CRYPTO)
+async def create_custom_crypto(callback: CallbackQuery) -> None:
+    """Handle custom crypto invoice creation."""
+    from bot.texts import CRYPTO_CUSTOM_INVOICE
+    await callback.answer()
+    await callback.message.edit_text(CRYPTO_CUSTOM_INVOICE)
+
 @router.callback_query(F.data == "back_profile")
 async def back_to_profile(callback: CallbackQuery) -> None:
     """Handle back to profile."""
@@ -151,6 +186,48 @@ async def back_to_profile(callback: CallbackQuery) -> None:
     )
     
     await callback.message.answer(profile_text, reply_markup=kb_profile_back())
+    await callback.answer()
+
+@router.callback_query(F.data == UNIFIED_PAYMENT_HISTORY)
+async def unified_payment_history(callback: CallbackQuery) -> None:
+    """Show unified payment history."""
+    from bot.keyboards import kb_unified_payment_history
+    
+    user_id = callback.from_user.id
+    payment_service = PaymentService()
+    
+    # Get first page of payment history
+    text, has_previous, has_next = await payment_service.get_unified_payment_history(user_id, page=1)
+    
+    await callback.message.edit_text(
+        text,
+        reply_markup=kb_unified_payment_history(page=1, has_previous=has_previous, has_next=has_next)
+    )
+    await callback.answer()
+
+@router.callback_query(F.data.startswith(UNIFIED_PAYMENT_PAGE_PREFIX))
+async def unified_payment_history_page(callback: CallbackQuery) -> None:
+    """Handle pagination for unified payment history."""
+    from bot.keyboards import kb_unified_payment_history
+    
+    user_id = callback.from_user.id
+    payment_service = PaymentService()
+    
+    # Extract page number from callback data
+    page_str = callback.data.replace(UNIFIED_PAYMENT_PAGE_PREFIX, "")
+    try:
+        page = int(page_str)
+    except ValueError:
+        await callback.answer("Invalid page number.", show_alert=True)
+        return
+    
+    # Get payment history for the requested page
+    text, has_previous, has_next = await payment_service.get_unified_payment_history(user_id, page=page)
+    
+    await callback.message.edit_text(
+        text,
+        reply_markup=kb_unified_payment_history(page=page, has_previous=has_previous, has_next=has_next)
+    )
     await callback.answer()
 
 

@@ -4,7 +4,7 @@ from datetime import datetime
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
 from bot.db.mongo import get_database
-from bot.db.models import User, Referral, Transaction, Payment
+from bot.db.models import User, Referral, Transaction, Payment, CryptoInvoice, UnifiedPaymentHistory
 
 class UserRepository:
     """Repository for user operations."""
@@ -22,7 +22,12 @@ class UserRepository:
     
     async def update_user(self, user_id: int, update_data: dict) -> None:
         """Update user data."""
-        await self.collection.update_one({"_id": user_id}, {"$set": update_data})
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Repository: Updating user {user_id} with data: {update_data}")
+        
+        result = await self.collection.update_one({"_id": user_id}, {"$set": update_data})
+        logger.info(f"Repository: Update result: {result}")
     
     async def increment_referral_count(self, user_id: int) -> None:
         """Increment user's referral count."""
@@ -33,17 +38,28 @@ class UserRepository:
     
     async def add_referral_tickets(self, user_id: int, tickets: str) -> None:
         """Add tickets to user's referral earnings."""
-        await self.collection.update_one(
-            {"_id": user_id}, 
-            {"$inc": {"tickets": 1, "referral_ticket_earned": float(tickets)}}
-        )
+        # Get current user to calculate new referral_ticket_earned
+        user = await self.get_user(user_id)
+        if user:
+            current_earned = float(user["referral_ticket_earned"])
+            new_earned = current_earned + float(tickets)
+            
+            await self.collection.update_one(
+                {"_id": user_id}, 
+                {"$inc": {"tickets": 1}, "$set": {"referral_ticket_earned": str(new_earned)}}
+            )
     
     async def increment_tickets(self, user_id: int, amount: int) -> None:
         """Increment user's tickets."""
-        await self.collection.update_one(
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Repository: Incrementing {amount} tickets for user {user_id}")
+        
+        result = await self.collection.update_one(
             {"_id": user_id}, 
             {"$inc": {"tickets": amount}}
         )
+        logger.info(f"Repository: Update result: {result}")
 
 class ReferralRepository:
     """Repository for referral operations."""
@@ -125,4 +141,83 @@ class PaymentRepository:
             {"payload": payload},
             {"$set": {"status": "cancelled"}}
         )
+
+class CryptoInvoiceRepository:
+    """Repository for crypto invoice operations."""
+    
+    def __init__(self):
+        self.collection: AsyncIOMotorCollection = get_database().crypto_invoices
+    
+    async def create_invoice(self, invoice: CryptoInvoice) -> None:
+        """Create a new crypto invoice record."""
+        await self.collection.insert_one(invoice)
+    
+    async def get_invoice_by_id(self, invoice_id: str) -> Optional[CryptoInvoice]:
+        """Get invoice by invoice ID."""
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Repository: Looking for invoice with ID: {invoice_id} (type: {type(invoice_id)})")
+        
+        result = await self.collection.find_one({"invoice_id": invoice_id})
+        logger.info(f"Repository: Query result: {result}")
+        
+        return result
+    
+    async def update_invoice_status(self, invoice_id: str, status: str) -> None:
+        """Update invoice status."""
+        update_data = {"status": status}
+        if status == "paid":
+            update_data["paid_at"] = datetime.utcnow()
+        
+        await self.collection.update_one(
+            {"invoice_id": invoice_id},
+            {"$set": update_data}
+        )
+    
+    async def get_user_invoices(self, user_id: int, limit: int = 50) -> List[CryptoInvoice]:
+        """Get user's crypto invoice history."""
+        cursor = self.collection.find({"user_id": user_id}).sort("created_at", -1).limit(limit)
+        return await cursor.to_list(length=limit)
+    
+    async def cancel_invoice(self, invoice_id: str) -> None:
+        """Cancel an invoice."""
+        await self.collection.update_one(
+            {"invoice_id": invoice_id},
+            {"$set": {"status": "cancelled"}}
+        )
+
+class UnifiedPaymentHistoryRepository:
+    """Repository for unified payment history operations."""
+    
+    def __init__(self):
+        self.collection: AsyncIOMotorCollection = get_database().unified_payment_history
+    
+    async def create_payment_record(self, payment: UnifiedPaymentHistory) -> None:
+        """Create a new unified payment record."""
+        await self.collection.insert_one(payment)
+    
+    async def get_user_payment_history(
+        self, 
+        user_id: int, 
+        page: int = 1, 
+        per_page: int = 3
+    ) -> tuple[List[UnifiedPaymentHistory], int]:
+        """Get user's payment history with pagination."""
+        skip = (page - 1) * per_page
+        
+        # Get total count
+        total_count = await self.collection.count_documents({"user_id": user_id})
+        
+        # Get paginated results
+        cursor = self.collection.find({"user_id": user_id}).sort("created_at", -1).skip(skip).limit(per_page)
+        payments = await cursor.to_list(length=per_page)
+        
+        return payments, total_count
+    
+    async def get_payment_by_id(self, payment_id: str, payment_type: str) -> Optional[UnifiedPaymentHistory]:
+        """Get payment by payment ID and type."""
+        return await self.collection.find_one({
+            "payment_id": payment_id,
+            "payment_type": payment_type
+        })
 

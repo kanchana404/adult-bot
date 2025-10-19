@@ -32,3 +32,13 @@ STAR_PACKAGE_PREFIX = "star_pkg_"  # Format: star_pkg_{index}
 VERIFY_PAYMENT_PREFIX = "verify_pay_"  # Format: verify_pay_{payload}
 CHECK_PAYMENT_HISTORY = "check_payment_history"
 
+# Crypto payment callbacks
+CRYPTO_PACKAGE_PREFIX = "crypto_pkg_"  # Format: crypto_pkg_{index}
+CHECK_CRYPTO_INVOICE_PREFIX = "check_crypto_"  # Format: check_crypto_{invoice_id}
+CHECK_CRYPTO_HISTORY = "check_crypto_history"
+CREATE_CUSTOM_CRYPTO = "create_custom_crypto"
+
+# Unified payment history callbacks
+UNIFIED_PAYMENT_HISTORY = "unified_payment_history"
+UNIFIED_PAYMENT_PAGE_PREFIX = "unified_page_"  # Format: unified_page_{page_number}
+
