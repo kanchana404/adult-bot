@@ -1,6 +1,6 @@
 """Repository layer for database operations."""
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timezone
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
 from bot.db.mongo import get_database
@@ -60,6 +60,13 @@ class UserRepository:
             {"$inc": {"tickets": amount}}
         )
         logger.info(f"Repository: Update result: {result}")
+    
+    async def update_last_activity(self, user_id: int) -> None:
+        """Update user's last activity timestamp."""
+        await self.collection.update_one(
+            {"_id": user_id}, 
+            {"$set": {"last_activity": datetime.now(timezone.utc)}}
+        )
 
 class ReferralRepository:
     """Repository for referral operations."""
@@ -73,7 +80,7 @@ class ReferralRepository:
             "_id": ObjectId(),
             "referrer_id": referrer_id,
             "referred_user_id": referred_user_id,
-            "created_at": datetime.utcnow()
+            "created_at": datetime.now(timezone.utc)
         }
         await self.collection.insert_one(referral)
     
@@ -124,7 +131,7 @@ class PaymentRepository:
             {
                 "$set": {
                     "status": "paid",
-                    "paid_at": datetime.utcnow(),
+                    "paid_at": datetime.now(timezone.utc),
                     "telegram_payment_id": telegram_payment_id
                 }
             }
@@ -167,7 +174,7 @@ class CryptoInvoiceRepository:
         """Update invoice status."""
         update_data = {"status": status}
         if status == "paid":
-            update_data["paid_at"] = datetime.utcnow()
+            update_data["paid_at"] = datetime.now(timezone.utc)
         
         await self.collection.update_one(
             {"invoice_id": invoice_id},

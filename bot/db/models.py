@@ -18,6 +18,7 @@ class User(TypedDict):
     accepted_terms: bool
     last_daily_checkin_at: Optional[datetime]
     language: str  # User's preferred language code
+    last_activity: Optional[datetime]  # Last time user interacted with the bot
 
 class Referral(TypedDict):
     """Referral document model."""

@@ -144,3 +144,10 @@ def kb_unified_payment_history(page: int = 1, has_previous: bool = False, has_ne
     
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
+def kb_important_notice() -> InlineKeyboardMarkup:
+    """Important notice keyboard with backup bot button."""
+    keyboard = [
+        [InlineKeyboardButton(text="Backup Bot 🎟", url="https://t.me/Onii1BackupBot")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+

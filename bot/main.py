@@ -13,6 +13,7 @@ from bot.handlers import (
     free_credit, terms, admin, language, universal
 )
 from bot.services.payments import PaymentService
+from bot.middleware.activity_tracker import ActivityTrackerMiddleware
 
 # Configure logging
 logging.basicConfig(
@@ -73,6 +74,10 @@ async def main() -> None:
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
     dp = Dispatcher()
+    
+    # Register middleware for activity tracking
+    dp.message.middleware(ActivityTrackerMiddleware())
+    dp.callback_query.middleware(ActivityTrackerMiddleware())
     
     # Register payment handlers (must be before routers)
     dp.pre_checkout_query.register(pre_checkout_handler)

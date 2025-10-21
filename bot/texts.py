@@ -38,11 +38,11 @@ Telegram – Slow, longer processing, less promotions
 🔽 Please choose a payment method below:
 
 🌐 Website: Oniiai.com | 🛍️ Shop: Oniishop.us
-👥 Group Onii AI: t.me/+YfJDrYjVxDg0ZGNl
-👥 Group Onii Shop: t.me/+42AoYLMxXIBiNWNl
-📡 Channel Onii AI: t.me/+hyrrhLAK02Y1NTdl
-📡 Channel Onii Hub: t.me/+mRmEqqKZwwUyM2Q1
-📡 Channel Onii XXX: t.me/+sCWoT_eYdVcyMGQ1"""
+👥 Group Onii AI: t.me/+BryXTab4AA5hYWNl
+👥 Group Onii Shop: t.me/+dnKKXRGYm_swZTc1
+📡 Channel Onii AI: t.me/+DtXi9z2VgcxhYjE1
+📡 Channel Onii Hub: t.me/+5dQBKzTuB5UyNTI1
+📡 Channel Onii XXX: t.me/+pHElu4SCq_NhMmFl"""
 
 # Affiliate money text
 AFFILIATE_TITLE = "🔗 Share & Earn"
@@ -194,6 +194,47 @@ UNIFIED_PAYMENT_HISTORY_HEADER = "📊 Payment History (Page {page} of {total})\
 UNIFIED_PAYMENT_HISTORY_EMPTY = "📊 Payment History\n\nYou haven't made any payments yet."
 
 # Welcome messages
-WELCOME_NEW = "Welcome! You've been granted $0.10 balance and 1 ticket to get started."
-WELCOME_BACK = "Welcome back! Here's your main menu:"
+WELCOME_NEW = """🙌 Welcome to Onii AI Bot!
+Discover a world of unlimited creativity with our smart AI-powered photo & video editing tools.
+Customize your style your way – fast, private, and powerful.
+
+💼 Account ID: {account_id}
+💵 Balance: ${balance} | 🎟 Tickets: {tickets} (VIP: {vip}🎟) | 🎰 Lucky spins: {lucky}
+
+🌐 Website: Oniiai.com | 🛍️ Shop: Oniishop.us
+👥 Group Onii AI: t.me/+BryXTab4AA5hYWNl
+👥 Group Onii Shop: t.me/+dnKKXRGYm_swZTc1
+📡 Channel Onii AI: t.me/+DtXi9z2VgcxhYjE1
+📡 Channel Onii Hub: t.me/+5dQBKzTuB5UyNTI1
+📡 Channel Onii XXX: t.me/+pHElu4SCq_NhMmFl"""
+
+WELCOME_BACK = """🙌 Welcome to Onii AI Bot!
+Discover a world of unlimited creativity with our smart AI-powered photo & video editing tools.
+Customize your style your way – fast, private, and powerful.
+
+💼 Account ID: {account_id}
+💵 Balance: ${balance} | 🎟 Tickets: {tickets} (VIP: {vip}🎟) | 🎰 Lucky spins: {lucky}
+
+🌐 Website: Oniiai.com | 🛍️ Shop: Oniishop.us
+👥 Group Onii AI: t.me/+BryXTab4AA5hYWNl
+👥 Group Onii Shop: t.me/+dnKKXRGYm_swZTc1
+📡 Channel Onii AI: t.me/+DtXi9z2VgcxhYjE1
+📡 Channel Onii Hub: t.me/+5dQBKzTuB5UyNTI1
+📡 Channel Onii XXX: t.me/+pHElu4SCq_NhMmFl"""
+
+# Important notice for inactive users
+IMPORTANT_NOTICE = """⚠️ Important Notice: If the bot you are using is currently showing as deleted or disabled,
+please click the button below to get detailed instructions.
+🤖 View the list of backup bots: @Onii1BackupBot
+🙌 The world's fastest video exchange bot – Share to earn 1.5 🎟 or share without limits 🎁 to receive cash rewards!
+
+🔞 Onii AI – Experimental Channel for AI Photo & Video Editing Tools Create adult content that matches your taste: sexy images, deepfake videos, 4K quality, 100% private. ⚡️ Exclusive tech not yet released – only for
+
+
+🌐 Website: Oniiai.com | 🛍️ Shop: Oniishop.us
+👥 Group Onii AI: t.me/+BryXTab4AA5hYWNl
+👥 Group Onii Shop: t.me/+dnKKXRGYm_swZTc1
+📡 Channel Onii AI: t.me/+DtXi9z2VgcxhYjE1
+📡 Channel Onii Hub: t.me/+5dQBKzTuB5UyNTI1
+📡 Channel Onii XXX: t.me/+pHElu4SCq_NhMmFl"""
 
