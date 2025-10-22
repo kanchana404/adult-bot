@@ -42,3 +42,12 @@ CREATE_CUSTOM_CRYPTO = "create_custom_crypto"
 UNIFIED_PAYMENT_HISTORY = "unified_payment_history"
 UNIFIED_PAYMENT_PAGE_PREFIX = "unified_page_"  # Format: unified_page_{page_number}
 
+# Image action callbacks
+IMAGE_GENERATE = "image_generate"
+IMAGE_FACE_SWAP = "image_face_swap"
+IMAGE_VIDEO_GEN = "image_video_gen"
+
+# Style selection callbacks
+STYLE_PAGE_PREFIX = "style_page_"  # Format: style_page_{page_number}
+STYLE_SELECT_PREFIX = "style_select_"  # Format: style_select_{style_name}
+

@@ -238,3 +238,18 @@ please click the button below to get detailed instructions.
 📡 Channel Onii Hub: t.me/+5dQBKzTuB5UyNTI1
 📡 Channel Onii XXX: t.me/+pHElu4SCq_NhMmFl"""
 
+# Image action prompt
+IMAGE_ACTION_PROMPT = """🖼️ What would you like to do with this image?
+
+📌 Note when using Onii AI for image editing: Please use high-quality images (clear, not blurry, not too dark or overexposed) so that Onii AI can accurately analyze and edit them. Low-resolution or blurry images may reduce the accuracy of the processing.
+‼️ Note: Photo does not meet requirements → wrong result, no credit refund."""
+
+# Style selection prompt
+STYLE_SELECTION_PROMPT = """📸 Make sure to choose a clear, unblurred, well-lit photo for best results.
+‼️ Note: Photo does not meet requirements → wrong result, no credit refund.
+
+Make sure the photo is clear, not blurry and of good quality so we can process it most accurately.
+Tutorial: 
+To move to the next page, use ⬅️➡️
+Select a popular style below👇"""
+

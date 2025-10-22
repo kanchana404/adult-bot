@@ -10,7 +10,7 @@ from bot.config import BOT_TOKEN
 from bot.db.mongo import init_mongodb, close_mongodb
 from bot.handlers import (
     start, profile, topup, affiliate, 
-    free_credit, terms, admin, language, universal
+    free_credit, terms, admin, language, universal, image_handler
 )
 from bot.services.payments import PaymentService
 from bot.middleware.activity_tracker import ActivityTrackerMiddleware
@@ -95,6 +95,7 @@ async def main() -> None:
     dp.include_router(affiliate.router) # For callback handlers
     dp.include_router(free_credit.router) # For callback handlers
     dp.include_router(terms.router)    # For callback handlers
+    dp.include_router(image_handler.router)  # Image handler for photos
     dp.include_router(universal.router)  # Universal handler must be last
     
     try:

@@ -74,6 +74,21 @@ TRANSLATIONS = {
             "telegram_stars": "Telegram Stars payment coming soon.",
             "crypto": "Crypto payment coming soon.",
             "paypal": "PayPal payment coming soon."
+        },
+        "image_actions": {
+            "prompt": "🖼️ What would you like to do with this image?\n\n📌 Note when using Onii AI for image editing: Please use high-quality images (clear, not blurry, not too dark or overexposed) so that Onii AI can accurately analyze and edit them. Low-resolution or blurry images may reduce the accuracy of the processing.\n‼️ Note: Photo does not meet requirements → wrong result, no credit refund."
+        },
+        "style_selection": {
+            "prompt": "📸 Make sure to choose a clear, unblurred, well-lit photo for best results.\n‼️ Note: Photo does not meet requirements → wrong result, no credit refund.\n\nMake sure the photo is clear, not blurry and of good quality so we can process it most accurately.\nTutorial: \nTo move to the next page, use ⬅️➡️\nSelect a popular style below👇"
+        },
+        "face_swap": {
+            "prompt": "Face Image Received, Which Feature Do You Want to Use?\n\n📌 Note when editing face:\n- Photo must be clear, face clearly visible.\n- Avoid blurry photos, face covering, many people.\n- Wrong results due to poor quality photos → no credit refund."
+        },
+        "photo_swap": {
+            "prompt": "Please send the photo you want to swap with"
+        },
+        "video_swap": {
+            "prompt": "Send 1 VIDEO to swap your face in\n\n👱‍♀️ The face is clearly visible\n👁 Looking at the camera\n\n🚀Below is a List of Reels 18+ for You to Use Faster with Rich Different Content\n✅If you don't like it, you can send your video directly to the Bot👇"
         }
     },
     # Add other languages here - for now, all will use English as fallback
@@ -98,6 +113,21 @@ TRANSLATIONS = {
         },
         "important_notice": {
             "text": "⚠️ Thông báo quan trọng: Nếu bot bạn đang sử dụng hiện đang hiển thị là đã bị xóa hoặc vô hiệu hóa,\nvui lòng nhấp vào nút bên dưới để nhận hướng dẫn chi tiết.\n🤖 Xem danh sách bot dự phòng: @Onii1BackupBot\n🙌 Bot trao đổi video nhanh nhất thế giới – Chia sẻ để kiếm 1.5 🎟 hoặc chia sẻ không giới hạn 🎁 để nhận phần thưởng tiền mặt!\n\n🔞 Onii AI – Kênh thử nghiệm cho các công cụ chỉnh sửa ảnh và video AI Tạo nội dung người lớn phù hợp với sở thích của bạn: hình ảnh gợi cảm, video deepfake, chất lượng 4K, 100% riêng tư. ⚡️ Công nghệ độc quyền chưa được phát hành – chỉ dành cho\n\n\n🌐 Trang web: Oniiai.com | 🛍️ Cửa hàng: Oniishop.us\n👥 Nhóm Onii AI: t.me/+BryXTab4AA5hYWNl\n👥 Nhóm Onii Shop: t.me/+dnKKXRGYm_swZTc1\n📡 Kênh Onii AI: t.me/+DtXi9z2VgcxhYjE1\n📡 Kênh Onii Hub: t.me/+5dQBKzTuB5UyNTI1\n📡 Kênh Onii XXX: t.me/+pHElu4SCq_NhMmFl"
+        },
+        "image_actions": {
+            "prompt": "🖼️ Bạn muốn làm gì với hình ảnh này?\n\n📌 Lưu ý khi sử dụng Onii AI để chỉnh sửa hình ảnh: Vui lòng sử dụng hình ảnh chất lượng cao (rõ ràng, không mờ, không quá tối hoặc quá sáng) để Onii AI có thể phân tích và chỉnh sửa chúng một cách chính xác. Hình ảnh độ phân giải thấp hoặc mờ có thể làm giảm độ chính xác của quá trình xử lý.\n‼️ Lưu ý: Ảnh không đáp ứng yêu cầu → kết quả sai, không hoàn lại tín dụng."
+        },
+        "style_selection": {
+            "prompt": "📸 Đảm bảo chọn ảnh rõ ràng, không mờ và được chiếu sáng tốt để có kết quả tốt nhất.\n‼️ Lưu ý: Ảnh không đáp ứng yêu cầu → kết quả sai, không hoàn lại tín dụng.\n\nĐảm bảo ảnh rõ ràng, không mờ và có chất lượng tốt để chúng tôi có thể xử lý chính xác nhất.\nHướng dẫn: \nĐể chuyển sang trang tiếp theo, sử dụng ⬅️➡️\nChọn một phong cách phổ biến bên dưới👇"
+        },
+        "face_swap": {
+            "prompt": "Đã nhận ảnh khuôn mặt, bạn muốn sử dụng tính năng nào?\n\n📌 Lưu ý khi chỉnh sửa khuôn mặt:\n- Ảnh phải rõ ràng, khuôn mặt hiển thị rõ.\n- Tránh ảnh mờ, che khuôn mặt, nhiều người.\n- Kết quả sai do ảnh chất lượng kém → không hoàn lại tín dụng."
+        },
+        "photo_swap": {
+            "prompt": "Vui lòng gửi ảnh bạn muốn hoán đổi"
+        },
+        "video_swap": {
+            "prompt": "Gửi 1 VIDEO để hoán đổi khuôn mặt của bạn\n\n👱‍♀️ Khuôn mặt hiển thị rõ ràng\n👁 Nhìn vào camera\n\n🚀Dưới đây là Danh sách Reels 18+ để bạn sử dụng nhanh hơn với nội dung phong phú khác nhau\n✅Nếu bạn không thích, bạn có thể gửi video trực tiếp cho Bot👇"
         }
     },
     "es": {
@@ -121,6 +151,12 @@ TRANSLATIONS = {
         },
         "important_notice": {
             "text": "⚠️ Aviso Importante: Si el bot que estás usando actualmente se muestra como eliminado o deshabilitado,\npor favor haz clic en el botón de abajo para obtener instrucciones detalladas.\n🤖 Ver la lista de bots de respaldo: @Onii1BackupBot\n🙌 El bot de intercambio de videos más rápido del mundo – ¡Comparte para ganar 1.5 🎟 o comparte sin límites 🎁 para recibir recompensas en efectivo!\n\n🔞 Onii AI – Canal Experimental para Herramientas de Edición de Fotos y Videos IA Crea contenido para adultos que coincida con tu gusto: imágenes sexys, videos deepfake, calidad 4K, 100% privado. ⚡️ Tecnología exclusiva aún no lanzada – solo para\n\n\n🌐 Sitio web: Oniiai.com | 🛍️ Tienda: Oniishop.us\n👥 Grupo Onii AI: t.me/+BryXTab4AA5hYWNl\n👥 Grupo Onii Shop: t.me/+dnKKXRGYm_swZTc1\n📡 Canal Onii AI: t.me/+DtXi9z2VgcxhYjE1\n📡 Canal Onii Hub: t.me/+5dQBKzTuB5UyNTI1\n📡 Canal Onii XXX: t.me/+pHElu4SCq_NhMmFl"
+        },
+        "image_actions": {
+            "prompt": "🖼️ ¿Qué te gustaría hacer con esta imagen?\n\n📌 Nota al usar Onii AI para edición de imágenes: Por favor usa imágenes de alta calidad (claras, no borrosas, no muy oscuras o sobreexpuestas) para que Onii AI pueda analizarlas y editarlas con precisión. Las imágenes de baja resolución o borrosas pueden reducir la precisión del procesamiento.\n‼️ Nota: Foto no cumple requisitos → resultado incorrecto, sin reembolso de crédito."
+        },
+        "style_selection": {
+            "prompt": "📸 Asegúrate de elegir una foto clara, sin desenfoque y bien iluminada para mejores resultados.\n‼️ Nota: Foto no cumple requisitos → resultado incorrecto, sin reembolso de crédito.\n\nAsegúrate de que la foto sea clara, no borrosa y de buena calidad para que podamos procesarla con mayor precisión.\nTutorial: \nPara mover a la siguiente página, usa ⬅️➡️\nSelecciona un estilo popular abajo👇"
         }
     },
     "fr": {
@@ -144,6 +180,12 @@ TRANSLATIONS = {
         },
         "important_notice": {
             "text": "⚠️ Avis Important : Si le bot que vous utilisez actuellement apparaît comme supprimé ou désactivé,\nveuillez cliquer sur le bouton ci-dessous pour obtenir des instructions détaillées.\n🤖 Voir la liste des bots de sauvegarde : @Onii1BackupBot\n🙌 Le bot d'échange de vidéos le plus rapide au monde – Partagez pour gagner 1,5 🎟 ou partagez sans limites 🎁 pour recevoir des récompenses en espèces !\n\n🔞 Onii AI – Canal expérimental pour les outils d'édition de photos et vidéos IA Créez du contenu adulte qui correspond à votre goût : images sexy, vidéos deepfake, qualité 4K, 100% privé. ⚡️ Technologie exclusive pas encore publiée – uniquement pour\n\n\n🌐 Site web : Oniiai.com | 🛍️ Boutique : Oniishop.us\n👥 Groupe Onii AI : t.me/+BryXTab4AA5hYWNl\n👥 Groupe Onii Shop : t.me/+dnKKXRGYm_swZTc1\n📡 Chaîne Onii AI : t.me/+DtXi9z2VgcxhYjE1\n📡 Chaîne Onii Hub : t.me/+5dQBKzTuB5UyNTI1\n📡 Chaîne Onii XXX : t.me/+pHElu4SCq_NhMmFl"
+        },
+        "image_actions": {
+            "prompt": "🖼️ Que souhaitez-vous faire avec cette image ?\n\n📌 Note lors de l'utilisation d'Onii AI pour l'édition d'images : Veuillez utiliser des images de haute qualité (claires, non floues, pas trop sombres ou surexposées) afin qu'Onii AI puisse les analyser et les éditer avec précision. Les images de basse résolution ou floues peuvent réduire la précision du traitement.\n‼️ Note : Photo ne répond pas aux exigences → mauvais résultat, pas de remboursement de crédit."
+        },
+        "style_selection": {
+            "prompt": "📸 Assurez-vous de choisir une photo claire, nette et bien éclairée pour de meilleurs résultats.\n‼️ Note : Photo ne répond pas aux exigences → mauvais résultat, pas de remboursement de crédit.\n\nAssurez-vous que la photo est claire, non floue et de bonne qualité pour que nous puissions la traiter avec le plus de précision.\nTutoriel : \nPour passer à la page suivante, utilisez ⬅️➡️\nSélectionnez un style populaire ci-dessous👇"
         }
     },
     "hi": {
@@ -236,6 +278,12 @@ TRANSLATIONS = {
         },
         "important_notice": {
             "text": "⚠️ 重要通知：如果您当前使用的机器人显示为已删除或已禁用，\n请点击下方按钮获取详细说明。\n🤖 查看备用机器人列表：@Onii1BackupBot\n🙌 世界最快的视频交换机器人——分享赚取1.5🎟或无限分享🎁获得现金奖励！\n\n🔞 Onii AI – AI照片和视频编辑删除工具的实验频道 创建符合您品味的成人内容：性感图片、深度伪造视频、4K质量、100%私密。⚡️独家技术尚未发布——仅限\n\n\n🌐 网站：Oniiai.com | 🛍️ 商店：Oniishop.us\n👥 Onii AI 群组：t.me/+BryXTab4AA5hYWNl\n👥 Onii Shop 群组：t.me/+dnKKXRGYm_swZTc1\n📡 Onii AI 频道：t.me/+DtXi9z2VgcxhYjE1\n📡 Onii Hub 频道：t.me/+5dQBKzTuB5UyNTI1\n📡 Onii XXX 频道：t.me/+pHElu4SCq_NhMmFl"
+        },
+        "image_actions": {
+            "prompt": "🖼️ 您想对这张图片做什么？\n\n📌 使用Onii AI进行图像编辑时的注意事项：请使用高质量图像（清晰、不模糊、不太暗或过度曝光），以便Onii AI能够准确分析和编辑它们。低分辨率或模糊的图像可能会降低处理的准确性。\n‼️ 注意：照片不符合要求 → 错误结果，不退还积分。"
+        },
+        "style_selection": {
+            "prompt": "📸 确保选择清晰、不模糊、光线良好的照片以获得最佳效果。\n‼️ 注意：照片不符合要求 → 错误结果，不退还积分。\n\n确保照片清晰、不模糊且质量良好，以便我们能够最准确地处理它。\n教程：\n要转到下一页，使用 ⬅️➡️\n在下面选择一个流行风格👇"
         }
     },
     "ru": {

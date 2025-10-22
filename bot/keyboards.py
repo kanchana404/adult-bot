@@ -7,7 +7,9 @@ from bot.callbacks import (
     CHECK_CRYPTO_INVOICE_PREFIX, CREATE_CUSTOM_CRYPTO,
     CHECK_CRYPTO_HISTORY, BACK_PROFILE, BACK_MAIN,
     UNIFIED_PAYMENT_HISTORY, UNIFIED_PAYMENT_PAGE_PREFIX,
-    SHARE_LINK, INVITE_FRIENDS, DAILY_CHECKIN, VIEW_TERMS, AGREE_TERMS
+    SHARE_LINK, INVITE_FRIENDS, DAILY_CHECKIN, VIEW_TERMS, AGREE_TERMS,
+    IMAGE_GENERATE, IMAGE_FACE_SWAP, IMAGE_VIDEO_GEN,
+    STYLE_PAGE_PREFIX, STYLE_SELECT_PREFIX
 )
 from bot.languages import get_text
 
@@ -149,5 +151,109 @@ def kb_important_notice() -> InlineKeyboardMarkup:
     keyboard = [
         [InlineKeyboardButton(text="Backup Bot 🎟", url="https://t.me/Onii1BackupBot")]
     ]
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+def kb_image_actions() -> InlineKeyboardMarkup:
+    """Image action selection keyboard."""
+    keyboard = [
+        [
+            InlineKeyboardButton(text="🎨 Generate Image", callback_data=IMAGE_GENERATE),
+            InlineKeyboardButton(text="🔄 Face Swap", callback_data=IMAGE_FACE_SWAP)
+        ],
+        [
+            InlineKeyboardButton(text="🎬 Generate Video", callback_data=IMAGE_VIDEO_GEN)
+        ]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+def kb_face_swap_options() -> InlineKeyboardMarkup:
+    """Face swap options keyboard."""
+    keyboard = [
+        [
+            InlineKeyboardButton(text="📷 Photo Swap", callback_data="photo_swap"),
+            InlineKeyboardButton(text="🎬 Video Swap", callback_data="video_swap")
+        ],
+        [
+            InlineKeyboardButton(text="« Back", callback_data="back_to_actions")
+        ]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+def kb_photo_swap_options() -> InlineKeyboardMarkup:
+    """Photo swap options keyboard."""
+    keyboard = [
+        [
+            InlineKeyboardButton(text="« Back", callback_data="back_to_face_swap"),
+            InlineKeyboardButton(text="❌ Cancel", callback_data="cancel_operation")
+        ]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+def kb_video_swap_options() -> InlineKeyboardMarkup:
+    """Video swap options keyboard."""
+    keyboard = [
+        [
+            InlineKeyboardButton(text="🔥 Reels 18+", callback_data="reels_18_plus"),
+            InlineKeyboardButton(text="« Back", callback_data="back_to_face_swap")
+        ],
+        [
+            InlineKeyboardButton(text="❌ Cancel", callback_data="cancel_operation")
+        ]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+def kb_style_selection(page: int = 1) -> InlineKeyboardMarkup:
+    """Style selection keyboard with pagination."""
+    # Style data - first page styles from the image description
+    styles = [
+        ("🍑 Succubus Tattoo", "succubus_tattoo"),
+        ("😈 Infernal Body Art", "infernal_body_art"),
+        ("🖤 Obsidian Skinwear", "obsidian_skinwear"),
+        ("🍜 Kikkoman Silk", "kikkoman_silk"),
+        ("🖤 Sheer Black Lingerie", "sheer_black_lingerie"),
+        ("💦 Face Splash", "face_splash"),
+        ("💖 LustFace", "lustface"),
+        ("🪡 Silk Restraint", "silk_restraint"),
+        ("🌙 Moonlight Seduction", "moonlight_seduction"),
+        ("💧 Soaked Tease", "soaked_tease")
+    ]
+    
+    keyboard = []
+    
+    # Add style buttons in 2 columns x 5 rows
+    for i in range(0, len(styles), 2):
+        row = []
+        for j in range(2):
+            if i + j < len(styles):
+                style_name, style_id = styles[i + j]
+                row.append(InlineKeyboardButton(
+                    text=style_name,
+                    callback_data=f"{STYLE_SELECT_PREFIX}{style_id}"
+                ))
+        keyboard.append(row)
+    
+    # Pagination controls
+    pagination_row = []
+    if page > 1:
+        pagination_row.append(InlineKeyboardButton(
+            text="⬅️",
+            callback_data=f"{STYLE_PAGE_PREFIX}{page - 1}"
+        ))
+    pagination_row.append(InlineKeyboardButton(
+        text=f"{page}/3",
+        callback_data="current_page"
+    ))
+    if page < 3:
+        pagination_row.append(InlineKeyboardButton(
+            text="➡️",
+            callback_data=f"{STYLE_PAGE_PREFIX}{page + 1}"
+        ))
+    keyboard.append(pagination_row)
+    
+    # Additional buttons
+    keyboard.append([InlineKeyboardButton(text="⭐ Explore +1500 Options", callback_data="explore_styles")])
+    keyboard.append([InlineKeyboardButton(text="BOT LIST 🔥", callback_data="bot_list")])
+    keyboard.append([InlineKeyboardButton(text="« Back", callback_data="back_to_actions")])
+    
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
