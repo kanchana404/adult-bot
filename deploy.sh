@@ -35,12 +35,25 @@ fi
 
 # Install MongoDB (if not using cloud MongoDB)
 echo "🍃 Installing MongoDB..."
-wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+# Get Ubuntu codename
+UBUNTU_CODENAME=$(lsb_release -cs)
+
+# Add MongoDB GPG key using new method
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
+
+# Add MongoDB repository
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu $UBUNTU_CODENAME/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+# Update package list and install MongoDB
 sudo apt update
 sudo apt install -y mongodb-org
+
+# Start and enable MongoDB
 sudo systemctl start mongod
 sudo systemctl enable mongod
+
+echo "✅ MongoDB installed and started"
 
 # Install screen for session management
 echo "📺 Installing screen..."
