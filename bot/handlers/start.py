@@ -4,7 +4,7 @@ from aiogram import Router, F
 from aiogram.types import Message, FSInputFile
 from aiogram.filters import CommandStart
 from datetime import timedelta, timezone
-from bot.db.repositories import UserRepository
+from bot.db.repositories import UserRepository, BotJobsVideoRepository
 from bot.db.models import User
 from bot.services.referrals import ReferralService
 from bot.services.economy import EconomyService
@@ -53,24 +53,34 @@ async def start_command(message: Message) -> None:
             "last_activity": current_time
         }
         
-        # Check for referral payload
-        logger.info(f"Checking referral payload in message: '{message.text}'")
+        # Check for referral payload or video deep link
+        logger.info(f"Checking payload in message: '{message.text}'")
         referrer_id = None
+        video_id = None
+        
         if message.text and len(message.text.split()) > 1:
-            try:
-                referrer_id = int(message.text.split()[1])
-                logger.info(f"Referral detected: referrer_id={referrer_id}, new_user_id={user_id}")
-                if referrer_id != user_id:  # Can't refer yourself
-                    new_user["referrer_id"] = referrer_id
-                    logger.info(f"Setting referrer_id in new user: {referrer_id}")
-                else:
-                    logger.info(f"User tried to refer themselves: {user_id}")
+            payload = message.text.split()[1]
+            
+            # Check if it's a video deep link
+            if payload.startswith("idvideo_"):
+                video_id = payload.replace("idvideo_", "")
+                logger.info(f"Video deep link detected: video_id={video_id}, user_id={user_id}")
+            else:
+                # Try to parse as referral ID
+                try:
+                    referrer_id = int(payload)
+                    logger.info(f"Referral detected: referrer_id={referrer_id}, new_user_id={user_id}")
+                    if referrer_id != user_id:  # Can't refer yourself
+                        new_user["referrer_id"] = referrer_id
+                        logger.info(f"Setting referrer_id in new user: {referrer_id}")
+                    else:
+                        logger.info(f"User tried to refer themselves: {user_id}")
+                        referrer_id = None
+                except (ValueError, IndexError) as e:
+                    logger.error(f"Invalid payload: {message.text}, error: {e}")
                     referrer_id = None
-            except (ValueError, IndexError) as e:
-                logger.error(f"Invalid referral payload: {message.text}, error: {e}")
-                referrer_id = None
         else:
-            logger.info(f"No referral payload found in message: '{message.text}'")
+            logger.info(f"No payload found in message: '{message.text}'")
         
         # Create user first
         await user_repo.create_user(new_user)
@@ -81,6 +91,11 @@ async def start_command(message: Message) -> None:
             logger.info(f"Processing referral after user creation: {referrer_id} -> {user_id}")
             success = await referral_service.process_referral(referrer_id, user_id)
             logger.info(f"Referral processing result: {success}")
+        
+        # Process video deep link if present
+        if video_id:
+            logger.info(f"Processing video deep link: video_id={video_id}, user_id={user_id}")
+            await process_video_deep_link(user_id, video_id, message)
         
         # Get user's language for welcome message
         user_language = new_user.get("language", "en")
@@ -110,6 +125,20 @@ async def start_command(message: Message) -> None:
         logger.info(f"New user created and welcome message sent: {user_id} (@{username})")
     else:
         logger.info(f"Existing user found: {user_id}")
+        
+        # Check for video deep link in existing user
+        video_id = None
+        if message.text and len(message.text.split()) > 1:
+            payload = message.text.split()[1]
+            if payload.startswith("idvideo_"):
+                video_id = payload.replace("idvideo_", "")
+                logger.info(f"Video deep link detected for existing user: video_id={video_id}, user_id={user_id}")
+        
+        # Process video deep link if present
+        if video_id:
+            logger.info(f"Processing video deep link for existing user: video_id={video_id}, user_id={user_id}")
+            await process_video_deep_link(user_id, video_id, message)
+        
         # Existing user - check if inactive for 1+ hour
         user_language = user.get("language", "en")
         last_activity = user.get("last_activity")
@@ -175,5 +204,49 @@ async def start_command(message: Message) -> None:
         await user_repo.update_last_activity(user_id)
         
         logger.info(f"Welcome back message sent to existing user: {user_id} (@{username})")
+
+async def process_video_deep_link(user_id: int, video_id: str, message: Message) -> None:
+    """Process video deep link for face swap."""
+    try:
+        bot_jobs_video_repo = BotJobsVideoRepository()
+        
+        # Look up the video data
+        video_data = await bot_jobs_video_repo.get_video_by_id(video_id)
+        if not video_data:
+            logger.warning(f"Video data not found for video_id: {video_id}")
+            await message.answer("❌ Video not found. Please try a different link.")
+            return
+        
+        # Check if user has a pending video job with a photo
+        chat_id = str(message.chat.id)
+        pending_job = await bot_jobs_video_repo.get_job_by_id(video_id)
+        
+        if pending_job and pending_job.get("photo_url") and pending_job.get("status") == "pending":
+            # Update the existing job with video data
+            # We need to update the job with video information
+            from bot.db.mongo import get_database
+            collection = get_database().bot_jobs_video
+            await collection.update_one(
+                {"job_id": video_id},
+                {
+                    "$set": {
+                        "status": "processing",
+                        "video_url": video_data.get("video_url", ""),
+                        "video_size": video_data.get("video_size", 0),
+                        "duration": video_data.get("duration", 0)
+                    }
+                }
+            )
+            
+            logger.info(f"Updated video job {video_id} with video data for user {user_id}")
+            await message.answer("✅ Video selected! Your face swap job is now processing.")
+        else:
+            # User needs to send a photo first
+            logger.info(f"User {user_id} needs to send photo first for video {video_id}")
+            await message.answer("📸 Please send a photo first to perform the face swap with this video.")
+            
+    except Exception as e:
+        logger.error(f"Error processing video deep link for user {user_id}, video_id {video_id}: {e}")
+        await message.answer("❌ Error processing video link. Please try again.")
 
 

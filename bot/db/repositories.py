@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
 from bot.db.mongo import get_database
-from bot.db.models import User, Referral, Transaction, Payment, CryptoInvoice, UnifiedPaymentHistory
+from bot.db.models import User, Referral, Transaction, Payment, CryptoInvoice, UnifiedPaymentHistory, ProcessImg, BotJobsPhoto, BotJobsVideo
 
 class UserRepository:
     """Repository for user operations."""
@@ -227,4 +227,95 @@ class UnifiedPaymentHistoryRepository:
             "payment_id": payment_id,
             "payment_type": payment_type
         })
+
+class ProcessImgRepository:
+    """Repository for process image operations."""
+    
+    def __init__(self):
+        self.collection: AsyncIOMotorCollection = get_database().process_img
+    
+    async def create_job(self, job: ProcessImg) -> ObjectId:
+        """Create a new process image job."""
+        result = await self.collection.insert_one(job)
+        return result.inserted_id
+    
+    async def get_job(self, job_id: ObjectId) -> Optional[ProcessImg]:
+        """Get process image job by ID."""
+        return await self.collection.find_one({"_id": job_id})
+    
+    async def update_status(self, job_id: ObjectId, status: str, output_url: Optional[str] = None, time_taken: Optional[float] = None) -> None:
+        """Update job status and optional output data."""
+        update_data = {"status": status}
+        if output_url is not None:
+            update_data["output_url"] = output_url
+        if time_taken is not None:
+            update_data["time_taken"] = time_taken
+        
+        await self.collection.update_one({"_id": job_id}, {"$set": update_data})
+
+class BotJobsPhotoRepository:
+    """Repository for photo swap job operations."""
+    
+    def __init__(self):
+        self.collection: AsyncIOMotorCollection = get_database().bot_jobs_photo
+    
+    async def create_job(self, job: BotJobsPhoto) -> str:
+        """Create a new photo swap job and return job_id."""
+        result = await self.collection.insert_one(job)
+        return job["job_id"]
+    
+    async def get_job_by_chat_id(self, chat_id: str) -> Optional[BotJobsPhoto]:
+        """Get photo swap job by chat ID."""
+        return await self.collection.find_one({"chat_id": chat_id, "status": "pending"})
+    
+    async def update_target_photo(self, chat_id: str, target_photo_url: str) -> None:
+        """Update job with target photo URL and set status to review."""
+        await self.collection.update_one(
+            {"chat_id": chat_id, "status": "pending"},
+            {
+                "$set": {
+                    "target_photo_url": target_photo_url,
+                    "status": "review"
+                }
+            }
+        )
+    
+    async def update_status(self, chat_id: str, status: str, output_url: Optional[str] = None, time_taken: Optional[float] = None) -> None:
+        """Update job status and optional output data."""
+        update_data = {"status": status}
+        if output_url is not None:
+            update_data["output_url"] = output_url
+        if time_taken is not None:
+            update_data["time_taken"] = time_taken
+        
+        await self.collection.update_one({"chat_id": chat_id}, {"$set": update_data})
+
+class BotJobsVideoRepository:
+    """Repository for video swap job operations."""
+    
+    def __init__(self):
+        self.collection: AsyncIOMotorCollection = get_database().bot_jobs_video
+    
+    async def create_job(self, job: BotJobsVideo) -> str:
+        """Create a new video swap job and return job_id."""
+        result = await self.collection.insert_one(job)
+        return job["job_id"]
+    
+    async def get_job_by_id(self, job_id: str) -> Optional[BotJobsVideo]:
+        """Get video swap job by job ID."""
+        return await self.collection.find_one({"job_id": job_id})
+    
+    async def get_video_by_id(self, video_id: str) -> Optional[dict]:
+        """Get video data by video ID for deep link lookup."""
+        return await self.collection.find_one({"job_id": video_id})
+    
+    async def update_status(self, job_id: str, status: str, output_url: Optional[str] = None, time_taken: Optional[float] = None) -> None:
+        """Update job status and optional output data."""
+        update_data = {"status": status}
+        if output_url is not None:
+            update_data["output_url"] = output_url
+        if time_taken is not None:
+            update_data["time_taken"] = time_taken
+        
+        await self.collection.update_one({"job_id": job_id}, {"$set": update_data})
 

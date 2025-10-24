@@ -85,3 +85,47 @@ class UnifiedPaymentHistory(TypedDict):
     paid_at: Optional[datetime]
     description: str  # Payment description
 
+class ProcessImg(TypedDict):
+    """Process image job for Generate Image function."""
+    _id: ObjectId
+    file_id: str  # Telegram file ID
+    bot: str  # Bot username from BOT_PUBLIC_USERNAME
+    chat_id: str
+    caption: str  # Selected style name
+    status: Literal["pending", "processing", "completed", "failed"]
+    created_at: datetime
+    queue: str  # "free" or "vip"
+    time_start: Optional[datetime]
+    output_url: Optional[str]
+    time_taken: Optional[float]
+
+class BotJobsPhoto(TypedDict):
+    """Photo swap job."""
+    _id: ObjectId
+    chat_id: str
+    status: Literal["pending", "review", "completed", "failed"]
+    job_id: str  # Random 12-char alphanumeric
+    bot: str  # Bot username from BOT_PUBLIC_USERNAME
+    photo_url: str  # Telegram API URL for source photo
+    target_photo_url: Optional[str]  # Telegram API URL for target photo
+    vip: bool
+    created_at: datetime
+    output_url: Optional[str]
+    time_taken: Optional[float]
+
+class BotJobsVideo(TypedDict):
+    """Video swap job."""
+    _id: ObjectId
+    chat_id: str
+    status: Literal["pending", "processing", "completed", "failed"]
+    job_id: str  # Random 12-char alphanumeric
+    photo_url: str  # Telegram API URL for face photo
+    video_url: str  # Telegram API URL for video
+    video_size: int
+    duration: int
+    vip: bool
+    bot: str
+    created_at: datetime
+    output_url: Optional[str]
+    time_taken: Optional[float]
+
