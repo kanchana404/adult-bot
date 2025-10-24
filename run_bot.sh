@@ -35,7 +35,7 @@ start_bot() {
     screen -dmS "$SCREEN_NAME" bash -c "
         source venv/bin/activate && \
         cd bot && \
-        python main.py 2>&1 | tee -a ../logs/bot.log
+        python3 main.py 2>&1 | tee -a ../logs/bot.log
     "
     
     sleep 2

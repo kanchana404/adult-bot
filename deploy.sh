@@ -13,7 +13,25 @@ sudo apt update && sudo apt upgrade -y
 
 # Install Python 3.11+ and pip
 echo "🐍 Installing Python 3.11+ and pip..."
-sudo apt install -y python3.11 python3.11-venv python3.11-dev python3-pip
+
+# Check if Python 3.11 is available, otherwise use available version
+if apt list python3.11 2>/dev/null | grep -q python3.11; then
+    echo "Installing Python 3.11..."
+    sudo apt install -y python3.11 python3.11-venv python3.11-dev python3-pip
+else
+    echo "Python 3.11 not available, installing latest Python 3.x..."
+    sudo apt install -y python3 python3-venv python3-dev python3-pip
+    
+    # Check Python version
+    PYTHON_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
+    echo "Installed Python version: $PYTHON_VERSION"
+    
+    # Create symlink for python3.11 if needed
+    if [ ! -f /usr/bin/python3.11 ]; then
+        echo "Creating python3.11 symlink..."
+        sudo ln -sf /usr/bin/python3 /usr/bin/python3.11
+    fi
+fi
 
 # Install MongoDB (if not using cloud MongoDB)
 echo "🍃 Installing MongoDB..."
