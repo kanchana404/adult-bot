@@ -9,9 +9,11 @@ from bot.db.models import User
 from bot.services.referrals import ReferralService
 from bot.services.economy import EconomyService
 from bot.keyboards import kb_main_menu, kb_important_notice
+from bot.admin_keyboards import kb_admin_menu
 from bot.texts import WELCOME_NEW, WELCOME_BACK, IMPORTANT_NOTICE
 from bot.languages import get_text
 from bot.utils.time import utc_now
+from bot.utils.user import is_admin_user
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -99,21 +101,53 @@ async def start_command(message: Message) -> None:
         
         # Get user's language for welcome message
         user_language = new_user.get("language", "en")
-        welcome_text = get_text(user_language, "welcome.new").format(
-            account_id=new_user["account_id"],
-            balance=new_user["balance_usd"],
-            tickets=new_user["tickets"],
-            vip=new_user["vip_tickets"],
-            lucky=new_user["lucky_spins"]
-        )
         
-        # Send video with welcome message as caption
-        video_file = FSInputFile("bot/src/data.mp4")
-        welcome_msg = await message.answer_video(
-            video=video_file,
-            caption=welcome_text,
-            reply_markup=kb_main_menu(user_language)
-        )
+        # Check if user is admin
+        if is_admin_user(user_id):
+            # Admin welcome message
+            admin_welcome_text = f"""🔧 <b>ADMIN PANEL</b> 🔧
+
+Welcome back, Admin!
+
+👤 <b>Your Account:</b>
+• Account ID: {new_user["account_id"]}
+• Balance: ${new_user["balance_usd"]}
+• Tickets: {new_user["tickets"]} 🎟️
+• VIP Tickets: {new_user["vip_tickets"]} ⭐
+• Lucky Spins: {new_user["lucky_spins"]} 🍀
+
+🎛️ <b>Admin Features:</b>
+• User Status & Analytics
+• Revenue Tracking
+• Button Management
+• Bot Statistics
+
+Use the buttons below to access admin functions."""
+            
+            # Send video with admin welcome message
+            video_file = FSInputFile("bot/src/data.mp4")
+            welcome_msg = await message.answer_video(
+                video=video_file,
+                caption=admin_welcome_text,
+                reply_markup=kb_admin_menu()
+            )
+        else:
+            # Regular user welcome message
+            welcome_text = get_text(user_language, "welcome.new").format(
+                account_id=new_user["account_id"],
+                balance=new_user["balance_usd"],
+                tickets=new_user["tickets"],
+                vip=new_user["vip_tickets"],
+                lucky=new_user["lucky_spins"]
+            )
+            
+            # Send video with welcome message as caption
+            video_file = FSInputFile("bot/src/data.mp4")
+            welcome_msg = await message.answer_video(
+                video=video_file,
+                caption=welcome_text,
+                reply_markup=kb_main_menu(user_language)
+            )
         
         # Pin the welcome message
         try:
@@ -177,21 +211,51 @@ async def start_command(message: Message) -> None:
                 logger.warning(f"Failed to pin notice message for user {user_id}: {e}")
         
         # Send welcome back message with video
-        welcome_text = get_text(user_language, "welcome.back").format(
-            account_id=user["account_id"],
-            balance=user["balance_usd"],
-            tickets=user["tickets"],
-            vip=user["vip_tickets"],
-            lucky=user["lucky_spins"]
-        )
-        
-        # Send video with welcome message as caption
-        video_file = FSInputFile("bot/src/data.mp4")
-        welcome_msg = await message.answer_video(
-            video=video_file,
-            caption=welcome_text,
-            reply_markup=kb_main_menu(user_language)
-        )
+        if is_admin_user(user_id):
+            # Admin welcome message
+            admin_welcome_text = f"""🔧 <b>ADMIN PANEL</b> 🔧
+
+Welcome back, Admin!
+
+👤 <b>Your Account:</b>
+• Account ID: {user["account_id"]}
+• Balance: ${user["balance_usd"]}
+• Tickets: {user["tickets"]} 🎟️
+• VIP Tickets: {user["vip_tickets"]} ⭐
+• Lucky Spins: {user["lucky_spins"]} 🍀
+
+🎛️ <b>Admin Features:</b>
+• User Status & Analytics
+• Revenue Tracking
+• Button Management
+• Bot Statistics
+
+Use the buttons below to access admin functions."""
+            
+            # Send video with admin welcome message
+            video_file = FSInputFile("bot/src/data.mp4")
+            welcome_msg = await message.answer_video(
+                video=video_file,
+                caption=admin_welcome_text,
+                reply_markup=kb_admin_menu()
+            )
+        else:
+            # Regular user welcome message
+            welcome_text = get_text(user_language, "welcome.back").format(
+                account_id=user["account_id"],
+                balance=user["balance_usd"],
+                tickets=user["tickets"],
+                vip=user["vip_tickets"],
+                lucky=user["lucky_spins"]
+            )
+            
+            # Send video with welcome message as caption
+            video_file = FSInputFile("bot/src/data.mp4")
+            welcome_msg = await message.answer_video(
+                video=video_file,
+                caption=welcome_text,
+                reply_markup=kb_main_menu(user_language)
+            )
         
         # Pin the welcome message
         try:

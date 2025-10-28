@@ -129,3 +129,12 @@ class BotJobsVideo(TypedDict):
     output_url: Optional[str]
     time_taken: Optional[float]
 
+class Node(TypedDict):
+    """Dynamic button node for style selection."""
+    _id: ObjectId
+    node_name: str  # Display name for the button (e.g., "Lust Face", "Moonlight Seduction")
+    other_text: str  # Accessible text/identifier (e.g., "q,2", "a,1")
+    count: int  # Number of images generated for this button format
+    created_at: datetime
+    updated_at: datetime
+

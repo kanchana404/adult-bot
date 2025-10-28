@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
 from bot.db.mongo import get_database
-from bot.db.models import User, Referral, Transaction, Payment, CryptoInvoice, UnifiedPaymentHistory, ProcessImg, BotJobsPhoto, BotJobsVideo
+from bot.db.models import User, Referral, Transaction, Payment, CryptoInvoice, UnifiedPaymentHistory, ProcessImg, BotJobsPhoto, BotJobsVideo, Node
 
 class UserRepository:
     """Repository for user operations."""
@@ -318,4 +318,43 @@ class BotJobsVideoRepository:
             update_data["time_taken"] = time_taken
         
         await self.collection.update_one({"job_id": job_id}, {"$set": update_data})
+
+class NodeRepository:
+    """Repository for dynamic button node operations."""
+    
+    def __init__(self):
+        self.collection: AsyncIOMotorCollection = get_database().node
+    
+    async def create_node(self, node: Node) -> ObjectId:
+        """Create a new node."""
+        result = await self.collection.insert_one(node)
+        return result.inserted_id
+    
+    async def get_all_nodes(self) -> List[Node]:
+        """Get all nodes ordered by count descending."""
+        cursor = self.collection.find({}).sort("count", -1)
+        return await cursor.to_list(length=None)
+    
+    async def get_node_by_other_text(self, other_text: str) -> Optional[Node]:
+        """Get node by other_text identifier."""
+        return await self.collection.find_one({"other_text": other_text})
+    
+    async def increment_count(self, other_text: str) -> None:
+        """Increment the count for a node."""
+        await self.collection.update_one(
+            {"other_text": other_text},
+            {
+                "$inc": {"count": 1},
+                "$set": {"updated_at": datetime.now(timezone.utc)}
+            }
+        )
+    
+    async def update_node(self, node_id: ObjectId, update_data: dict) -> None:
+        """Update node data."""
+        update_data["updated_at"] = datetime.now(timezone.utc)
+        await self.collection.update_one({"_id": node_id}, {"$set": update_data})
+    
+    async def delete_node(self, node_id: ObjectId) -> None:
+        """Delete a node."""
+        await self.collection.delete_one({"_id": node_id})
 

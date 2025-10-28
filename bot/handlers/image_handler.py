@@ -5,10 +5,10 @@ from bson import ObjectId
 from aiogram import Router, F, Bot
 from aiogram.types import Message, CallbackQuery, FSInputFile
 
-from bot.db.repositories import UserRepository, ProcessImgRepository, BotJobsPhotoRepository, BotJobsVideoRepository
+from bot.db.repositories import UserRepository, ProcessImgRepository, BotJobsPhotoRepository, BotJobsVideoRepository, NodeRepository
 from bot.db.models import ProcessImg, BotJobsPhoto, BotJobsVideo
 from bot.languages import get_text
-from bot.keyboards import kb_image_actions, kb_style_selection, kb_face_swap_options, kb_photo_swap_options, kb_video_swap_options
+from bot.keyboards import kb_image_actions, kb_style_selection, kb_face_swap_options, kb_photo_swap_options, kb_video_swap_options, kb_dynamic_style_selection
 from bot.texts import IMAGE_ACTION_PROMPT, STYLE_SELECTION_PROMPT
 from bot.callbacks import (
     IMAGE_GENERATE, IMAGE_FACE_SWAP, IMAGE_VIDEO_GEN,
@@ -106,10 +106,11 @@ async def handle_generate_image(callback: CallbackQuery) -> None:
     
     # Send style selection message with n.jpg attachment
     photo_file = FSInputFile("bot/src/n.jpg")
+    dynamic_keyboard = await kb_dynamic_style_selection(page=1)
     await callback.message.answer_photo(
         photo=photo_file,
         caption=get_text(user_language, "style_selection.prompt"),
-        reply_markup=kb_style_selection(page=1)
+        reply_markup=dynamic_keyboard
     )
     
     await callback.answer()
@@ -158,9 +159,10 @@ async def handle_style_pagination(callback: CallbackQuery) -> None:
         user_language = user.get("language", "en") if user else "en"
         
         # Update the message with new page
+        dynamic_keyboard = await kb_dynamic_style_selection(page=page)
         await callback.message.edit_caption(
             caption=get_text(user_language, "style_selection.prompt"),
-            reply_markup=kb_style_selection(page=page)
+            reply_markup=dynamic_keyboard
         )
         
     except ValueError:
@@ -219,6 +221,11 @@ async def handle_style_selection(callback: CallbackQuery, bot: Bot) -> None:
         
         job_id = await process_img_repo.create_job(job)
         logger.info(f"Created ProcessImg job {job_id} for user {user_id} with style {style_id}")
+        
+        # Increment the count for the selected node
+        node_repo = NodeRepository()
+        await node_repo.increment_count(style_id)
+        logger.info(f"Incremented count for node with other_text: {style_id}")
         
         await callback.answer(f"Style '{style_id}' selected! Job created successfully.")
         

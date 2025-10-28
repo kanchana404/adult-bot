@@ -12,6 +12,7 @@ from bot.callbacks import (
     STYLE_PAGE_PREFIX, STYLE_SELECT_PREFIX
 )
 from bot.languages import get_text
+from bot.db.repositories import NodeRepository
 
 def kb_main_menu(language: str = "en") -> ReplyKeyboardMarkup:
     """Main menu keyboard with language support."""
@@ -248,6 +249,50 @@ def kb_style_selection(page: int = 1) -> InlineKeyboardMarkup:
             text="➡️",
             callback_data=f"{STYLE_PAGE_PREFIX}{page + 1}"
         ))
+    keyboard.append(pagination_row)
+    
+    # Additional buttons
+    keyboard.append([InlineKeyboardButton(text="⭐ Explore +1500 Options", callback_data="explore_styles")])
+    keyboard.append([InlineKeyboardButton(text="BOT LIST 🔥", callback_data="bot_list")])
+    keyboard.append([InlineKeyboardButton(text="« Back", callback_data="back_to_actions")])
+    
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+async def kb_dynamic_style_selection(page: int = 1) -> InlineKeyboardMarkup:
+    """Dynamic style selection keyboard loaded from database."""
+    node_repo = NodeRepository()
+    nodes = await node_repo.get_all_nodes()
+    
+    # If no nodes in database, fall back to static styles
+    if not nodes:
+        return kb_style_selection(page)
+    
+    keyboard = []
+    
+    # Add style buttons in 2 columns x 5 rows
+    for i in range(0, len(nodes), 2):
+        row = []
+        for j in range(2):
+            if i + j < len(nodes):
+                node = nodes[i + j]
+                # Use node_name as display text and other_text as callback data
+                row.append(InlineKeyboardButton(
+                    text=node["node_name"],
+                    callback_data=f"{STYLE_SELECT_PREFIX}{node['other_text']}"
+                ))
+        keyboard.append(row)
+    
+    # Pagination controls (simplified for now)
+    pagination_row = []
+    if page > 1:
+        pagination_row.append(InlineKeyboardButton(
+            text="⬅️",
+            callback_data=f"{STYLE_PAGE_PREFIX}{page - 1}"
+        ))
+    pagination_row.append(InlineKeyboardButton(
+        text=f"{page}/1",  # For now, assume single page
+        callback_data="current_page"
+    ))
     keyboard.append(pagination_row)
     
     # Additional buttons

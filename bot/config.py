@@ -16,6 +16,11 @@ ADMIN_IDS: List[int] = []
 if admin_ids_str := os.getenv("ADMIN_IDS"):
     ADMIN_IDS = [int(x.strip()) for x in admin_ids_str.split(",")]
 
+# Support for ADMIN_USERIDS as well (for backward compatibility)
+if admin_userids_str := os.getenv("ADMIN_USERIDS"):
+    admin_userids = [int(x.strip()) for x in admin_userids_str.split(",")]
+    ADMIN_IDS.extend(admin_userids)
+
 BOT_PUBLIC_USERNAME: Optional[str] = os.getenv("BOT_PUBLIC_USERNAME")
 
 # Crypto payment configuration
